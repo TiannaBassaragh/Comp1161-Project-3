@@ -79,7 +79,7 @@ public class Store extends JPanel{
 
     private class TransactionButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Welcome");
+            JFrame frame = new JFrame("Welcome to Transactions");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             //Create and set up the content pane.
@@ -89,14 +89,13 @@ public class Store extends JPanel{
 
             //Display the window.
             frame.pack();
-            frame.setVisible(true)
-            ;
+            frame.setVisible(true);
         }
     }
 
     private class InventoryButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Welcome");
+            JFrame frame = new JFrame("Welcome To Inventory");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             //Create and set up the content pane.
@@ -107,7 +106,6 @@ public class Store extends JPanel{
             //Display the window.
             frame.pack();
             frame.setVisible(true);
-
         }
     }
 }
