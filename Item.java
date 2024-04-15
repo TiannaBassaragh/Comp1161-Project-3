@@ -1,7 +1,7 @@
 
 public class Item{
     private String name;
-    public int quantity;
+    public static int quantity;
     private String category;
 
     public Item(String name, int quantity, String category){
