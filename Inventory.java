@@ -4,6 +4,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.File;
@@ -41,8 +43,7 @@ public class Inventory extends JPanel{
         pnlCommand = new JPanel();
         pnlDisplay = new JPanel();
 
-        productList = loadItems("stock.dat");
-        System.out.print(productList);
+        productList = loadItems("stock.txt");
         String[] columnNames=  {"Product",
                 "Quantity",
                 "Category"};
@@ -56,7 +57,7 @@ public class Inventory extends JPanel{
         scrollPane = new JScrollPane(table);
         add(scrollPane);
 
-        pnlDisplay.setLayout(new GridLayout(2,1));
+
         //Creates and sets colours of buttons
         cmdAddItem  = new JButton("Add Item");
         cmdAddItem.setBackground(Color.GREEN);
@@ -69,13 +70,15 @@ public class Inventory extends JPanel{
         //Adds functionality to buttons
         cmdClose.addActionListener(new CloseButtonListener());
         cmdAddItem.addActionListener(new AddItemButtonListener());
-        cmdSortName.addActionListener(new SortCategoryButtonListener());
-        cmdSortCategory.addActionListener(new SortNameButtonListener());
+        cmdSortName.addActionListener(new SortNameButtonListener());
+        cmdSortCategory.addActionListener(new SortCategoryButtonListener());
         //Makes buttons appear in user interface
+
         pnlCommand.add(cmdAddItem);
         pnlCommand.add(cmdClose);
         pnlCommand.add(cmdSortName);
         pnlCommand.add(cmdSortCategory);
+
         add(pnlCommand);
     }
 
@@ -95,21 +98,41 @@ public class Inventory extends JPanel{
         model.addRow(item);
 
     }
-
-    public void addItem(Item i){
-        productList.add(i);
-        addToTable(i);
+    public void addToFile(Item i) {
+        try {
+            String newadd = i.getName() + " " + i.getQuantity() + " " + i.getCategory() + "\n"; // Add newline character
+            BufferedWriter writer = new BufferedWriter(new FileWriter("stock.txt", true)); // Append to the file
+            writer.write(newadd);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace(); // Properly handle the exception, print the stack trace for debugging
+        }
     }
+    public void addItem(Item i){
+        ArrayList<String> productNames = new ArrayList<String>();
+        for (Item p : productList) {
+            productNames.add(p.getName());
+            }
+        if (productNames.contains(i.getName())){
+            SearchandSetItem(i);
+        }
+        else{
+                productList.add(i);
+                addToTable(i);
+                addToFile(i);
+            }
+        }
+
 
     private ArrayList<Item> loadItems(String ifile){
-
+        Scanner iscan = null;
         ArrayList<Item> pList = new ArrayList<>();
         try
         {
-           Scanner iscan  = new Scanner(new File(ifile));
+           iscan  = new Scanner(new File(ifile));
             while(iscan.hasNext())
             {
-                String [] nextLine = iscan.nextLine().split(",");
+                String [] nextLine = iscan.nextLine().split(" ");
                 String name = nextLine[0];
                 int quantity = Integer.parseInt(nextLine[1]);
                 String cat = nextLine[2];
@@ -124,6 +147,15 @@ public class Inventory extends JPanel{
         return pList;
     }
 
+    public void SearchandSetItem(Item i) {
+        for (Item p : productList) {
+            if (i.getName().equals(p.getName())) {
+                model.setRowCount(0);
+                p.incQuantity(i.getQuantity());
+                showTable(productList);
+            }
+        }
+    }
 
     private class CompareCat implements Comparator <Item>{
         public int compare(Item i1, Item i2){
