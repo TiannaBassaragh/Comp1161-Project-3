@@ -71,10 +71,21 @@ public class ItemEntry extends JFrame
                 error += "Quantity must be in numeral format";
             }
             if (!error.equals("")){
+                JFrame frame = new JFrame("Welcome To Inventory");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                //Create and set up the content pane.
                 ExceptionPopUp epu = new ExceptionPopUp(error);
+                epu.setOpaque(true); //content panes must be opaque
+                frame.setContentPane(epu);
+                //Display the window.
+                frame.pack();
+                frame.setVisible(true);
+
             }
             else{
                 i.addItem(new Item(name, Integer.parseInt(iEnt.txtQuant.getText()), cat));
+
                 iEnt.setVisible(false);
             }
         }
