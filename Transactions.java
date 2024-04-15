@@ -4,6 +4,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.File;
@@ -12,6 +14,7 @@ import javax.swing.table.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.Comparator;
 import java.util.Collections;
+import java.util.Random;
 
 public class Transactions extends JPanel{
 
@@ -22,7 +25,7 @@ public class Transactions extends JPanel{
     private JButton     cmdAddTransaction;
     private JButton     cmdClose;
     private JButton     cmdSortTranId;
-    private JButton     cmdSortCategory;
+    private JButton     cmdSortName;
 
     private JPanel      pnlCommand;
     private JPanel      pnlDisplay;
@@ -32,7 +35,7 @@ public class Transactions extends JPanel{
     private JTable table;
     private DefaultTableModel model;
     private Store storeFront;
-    private Inventory thisStock;
+    private ArrayList<Item> itemList;
 
 
     public Transactions (Store s){
@@ -42,7 +45,7 @@ public class Transactions extends JPanel{
         pnlCommand = new JPanel();
         pnlDisplay = new JPanel();
 
-        transactionList = loadTransactions("sales.dat");
+        transactionList = loadTransactions("sales.txt");
         String[] columnNames=  {"Transaction ID",
                 "Product",
                 "Quantity",
@@ -61,20 +64,20 @@ public class Transactions extends JPanel{
         cmdAddTransaction.setBackground(Color.GREEN);
         cmdSortTranId  = new JButton("Sort by Transaction ID");
         cmdSortTranId.setBackground(Color.BLUE);
-        cmdSortCategory = new JButton("Sort by Category");
-        cmdSortCategory.setBackground(Color.ORANGE);
+        cmdSortName = new JButton("Sort by Name");
+        cmdSortName.setBackground(Color.ORANGE);
         cmdClose   = new JButton("Close");
         cmdClose.setBackground(Color.RED);
         //Adds functionality to buttons
         cmdClose.addActionListener(new CloseButtonListener());
         cmdAddTransaction.addActionListener(new AddTransactionButtonListener());
         cmdSortTranId.addActionListener(new SortTranIDButtonListener());
-        cmdSortCategory.addActionListener(new SortCategoryButtonListener());
+        cmdSortName.addActionListener(new SortCategoryButtonListener());
         //Makes buttons appear in user interface
         pnlCommand.add(cmdAddTransaction);
         pnlCommand.add(cmdClose);
         pnlCommand.add(cmdSortTranId);
-        pnlCommand.add(cmdSortCategory);
+        pnlCommand.add(cmdSortName);
 
         add(pnlCommand);
 
@@ -96,17 +99,91 @@ public class Transactions extends JPanel{
 
     }
 
+    public void addToFile(TransactionBase t) {
+        try {
+            String newadd = t.getTranId()+" "+t.getItemName()+" "+t.getQuantity()+" "+t.getDate() + "\n"; // Add newline character
+            BufferedWriter writer = new BufferedWriter(new FileWriter("sales.txt", true)); // Append to the file
+            writer.write(newadd);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace(); // Properly handle the exception, print the stack trace for debugging
+        }
+    }
+
     public void addTransaction(TransactionBase tb) {
-        ArrayList<Item> pl = thisStock.getProductList();
-        for (Item p : pl) {
+        itemList = loadItems("stock.txt");
+        for (Item p : itemList) {
             if (tb.getItemName().equals(p.getName())){
                     p.decQuantity(tb.getQuantity());
+                    unloadItems(itemList);
+                    tb.tranID = SearchandSetId(transactionList);
+                    addToTable(tb);
+                    addToFile(tb);
             }
             else{
                 ExceptionPopUp e = new ExceptionPopUp("Item not Found");
             }
 
         }
+    }
+    public int randomnum(){
+        int min = 10000000;
+        int max = 99999999;
+        Random  r = new Random();
+        int newId = r.nextInt(max-min)+min;
+        return newId;
+    }
+    public int SearchandSetId(ArrayList<TransactionBase> tb){
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        for (TransactionBase t: tb){
+            ids.add(t.getTranId());
+        }
+        int id = randomnum();
+
+        if (!ids.contains(id)){
+            id = id;
+        }
+        else{
+            id = SearchandSetId(tb);
+        }
+        return id;
+    }
+    private void unloadItems(ArrayList <Item> list){
+        try {
+            String updatedStock = "";
+            for (Item i:list){
+                updatedStock = updatedStock.concat(i.getName() + " " + i.getQuantity() + " " + i.getCategory() + "\n"); // Add newline character
+
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter("stock.txt"));
+            writer.write(updatedStock);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace(); // Properly handle the exception, print the stack trace for debugging
+        }
+    }
+    private ArrayList<Item> loadItems(String ifile){
+        Scanner iscan = null;
+        ArrayList<Item> pList = new ArrayList<>();
+        try
+        {
+            iscan  = new Scanner(new File(ifile));
+            while(iscan.hasNext())
+            {
+                String [] nextLine = iscan.nextLine().split(" ");
+                String name = nextLine[0];
+                int quantity = Integer.parseInt(nextLine[1]);
+                String cat = nextLine[2];
+                Item i = new Item(name, quantity, cat);
+                pList.add(i);
+            }
+
+            iscan.close();
+        }
+        catch(IOException e)
+        {e.printStackTrace(); }
+        return pList;
     }
 
     private ArrayList<TransactionBase> loadTransactions(String ifile){
@@ -117,11 +194,12 @@ public class Transactions extends JPanel{
             tscan  = new Scanner(new File(ifile));
             while(tscan.hasNext())
             {
-                String [] nextLine = tscan.nextLine().split(",");
-                String name = nextLine[0];
-                int quantity = Integer.parseInt(nextLine[1]);
-                String date = nextLine[2];
+                String [] nextLine = tscan.nextLine().split(" ");
+                String name = nextLine[1];
+                int quantity = Integer.parseInt(nextLine[2]);
+                String date = nextLine[3];
                 TransactionBase t = new TransactionBase(name, quantity, date);
+                t.tranID = Integer.parseInt(nextLine[0]);
                 transactionList.add(t);
             }
             tscan.close();
@@ -156,7 +234,7 @@ public class Transactions extends JPanel{
     private class SortTranIDButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             model.setRowCount(0);
-            Collections.sort(transactionList, new Transactions.CompareID());
+            Collections.sort(transactionList, new CompareID());
             showTable(transactionList);
         }
     }
@@ -164,7 +242,7 @@ public class Transactions extends JPanel{
     private class SortCategoryButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             model.setRowCount(0);
-            Collections.sort(transactionList, new Transactions.CompareName());
+            Collections.sort(transactionList, new CompareName());
             showTable(transactionList);
         }
     }
