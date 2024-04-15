@@ -1,0 +1,9 @@
+AllAwayLoofa 7 Hygiene
+AloeJuiceShampoo 10 Hair
+CherryLipPlump 20 Makeup
+DentalPicks 20 Hygiene
+FitHerPressedPowder 6 Makeup
+HairTies 100 Hair
+MegaBrush 7 Hair
+WetWipes 66 Hygiene
+WiggyComb 5 Hair
