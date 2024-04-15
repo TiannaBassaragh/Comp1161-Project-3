@@ -11,7 +11,7 @@ public class TransactionEntry extends JFrame
     private JButton     cmdClose;
     private JButton     cmdClearAll;
 
-    private JTextField   txtCat;     //category
+    private JTextField   txtDate;     //category
     private JPanel      pnlCommand;
     private JPanel      pnlDisplay;
 
@@ -30,9 +30,9 @@ public class TransactionEntry extends JFrame
         pnlDisplay.add(new JLabel("Quantity:"));
         txtQuant = new JTextField(3);
         pnlDisplay.add(txtQuant);
-        pnlDisplay.add(new JLabel("Category"));
-        txtCat= new JTextField(20);
-        pnlDisplay.add(txtCat);
+        pnlDisplay.add(new JLabel("Date"));
+        txtDate= new JTextField(20);
+        pnlDisplay.add(txtDate);
         pnlDisplay.setLayout(new GridLayout(3,4));
 
         //Creates and sets colours of buttons
@@ -62,7 +62,7 @@ public class TransactionEntry extends JFrame
     private class SaveButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String name = tEnt.txtName.getText();
-            String cat = tEnt.txtCat.getText();
+            String date = tEnt.txtDate.getText();
             String error = "";
             try {
                 int quauntity = Integer.parseInt(tEnt.txtQuant.getText());
@@ -74,7 +74,7 @@ public class TransactionEntry extends JFrame
                 ExceptionPopUp ex = new ExceptionPopUp(error);
             }
             else{
-                t.addTransaction(new TransactionBase(name, Integer.parseInt(tEnt.txtQuant.getText()), cat));
+                t.addTransaction(new TransactionBase(name, Integer.parseInt(tEnt.txtQuant.getText()), date));
                 tEnt.setVisible(false);
             }
         }
