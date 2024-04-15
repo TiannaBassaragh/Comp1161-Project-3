@@ -1,12 +1,11 @@
 public class TransactionBase{
-    private static int tranID = 0 ;
+    protected int tranID  ;
     private String product;
     private int quantity;
 
     private String date;
 
-    public TransactionBase( String itemName, int quantity, String date){
-        this.tranID++;
+    public TransactionBase(String itemName, int quantity, String date){
         this.product = itemName;
         this.quantity = quantity;
         this.date = date;
