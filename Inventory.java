@@ -61,26 +61,32 @@ public class Inventory extends JPanel{
         //Creates and sets colours of buttons
         cmdAddItem  = new JButton("Add Item");
         cmdAddItem.setBackground(Color.GREEN);
+        cmdUpdateItem = new JButton("Update Item");
+        cmdUpdateItem.setBackground(Color.decode("#ad52c7"));
         cmdSortName = new JButton("Sort by Item Name");
         cmdSortName.setBackground(Color.ORANGE);
         cmdSortCategory = new JButton("Sort by Category");
         cmdSortCategory.setBackground(Color.BLUE);
         cmdClose = new JButton("Close");
         cmdClose.setBackground(Color.RED);
+        
         //Adds functionality to buttons
+        cmdUpdateItem.addActionListener(new UpdateItemButtonListener());
         cmdClose.addActionListener(new CloseButtonListener());
         cmdAddItem.addActionListener(new AddItemButtonListener());
         cmdSortName.addActionListener(new SortNameButtonListener());
         cmdSortCategory.addActionListener(new SortCategoryButtonListener());
+        
         //Makes buttons appear in user interface
-
         pnlCommand.add(cmdAddItem);
+        pnlCommand.add(cmdUpdateItem);
         pnlCommand.add(cmdSortName);
         pnlCommand.add(cmdSortCategory);
         pnlCommand.add(cmdClose);
 
         add(pnlCommand);
     }
+
 
     private void showTable(ArrayList<Item> productList)
     {
@@ -177,6 +183,12 @@ public class Inventory extends JPanel{
 
     public ArrayList<Item> getProductList() {
         return productList;
+    }
+
+    private class UpdateItemButtonListener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            UpdateItem ue = new UpdateItem(thisScreen);
+        }
     }
 
     private class AddItemButtonListener implements ActionListener{
