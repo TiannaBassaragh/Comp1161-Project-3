@@ -75,9 +75,9 @@ public class Inventory extends JPanel{
         //Makes buttons appear in user interface
 
         pnlCommand.add(cmdAddItem);
-        pnlCommand.add(cmdClose);
         pnlCommand.add(cmdSortName);
         pnlCommand.add(cmdSortCategory);
+        pnlCommand.add(cmdClose);
 
         add(pnlCommand);
     }

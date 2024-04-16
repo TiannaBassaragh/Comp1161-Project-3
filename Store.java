@@ -32,13 +32,13 @@ public class Store extends JPanel{
         pnlCommand = new JPanel();
         pnlDisplay = new JPanel();
 
-        pnlDisplay.add(new JLabel("Welcome to the #1 Beauty Supply Store Database. CLICK an option to continue"));
+        pnlDisplay.add(new JLabel("Welcome to the #1 Beauty Supply Store Database. Click an option to continue."));
 
         //Creates and sets colours of buttons
         cmdTransactions  = new JButton("View Transactions");
-        cmdTransactions.setBackground(Color.GREEN);
+        cmdTransactions.setBackground(Color.decode("#32a85c"));
         cmdInventory  = new JButton("View Inventory");
-        cmdInventory.setBackground(Color.BLUE);
+        cmdInventory.setBackground(Color.decode("#3275a8"));
 
         //Adds functionality to buttons
         //cmdClose.addActionListener(new CloseButtonListener());

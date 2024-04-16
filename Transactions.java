@@ -73,11 +73,12 @@ public class Transactions extends JPanel{
         cmdAddTransaction.addActionListener(new AddTransactionButtonListener());
         cmdSortTranId.addActionListener(new SortTranIDButtonListener());
         cmdSortName.addActionListener(new SortCategoryButtonListener());
+        
         //Makes buttons appear in user interface
         pnlCommand.add(cmdAddTransaction);
-        pnlCommand.add(cmdClose);
         pnlCommand.add(cmdSortTranId);
         pnlCommand.add(cmdSortName);
+        pnlCommand.add(cmdClose);
 
         add(pnlCommand);
 
