@@ -21,7 +21,7 @@ public class TransactionEntry extends JFrame
     public TransactionEntry(Transactions trade)
     {
         tEnt = this; //Gives reference to specific instance of PersonEntry
-        setTitle("Entering new item");
+        setTitle("Entering new transaction");
         pnlCommand = new JPanel();
         pnlDisplay = new JPanel();
         pnlDisplay.add(new JLabel("Name:"));
@@ -71,7 +71,16 @@ public class TransactionEntry extends JFrame
                 error += "Quantity must be in numeral format";
             }
             if (!error.equals("")){
-                ExceptionPopUp ex = new ExceptionPopUp(error);
+                JFrame frame = new JFrame("An error has occurred");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                //Create and set up the content pane.
+                ExceptionPopUp epu = new ExceptionPopUp(error);
+                epu.setOpaque(true); //content panes must be opaque
+                frame.setContentPane(epu);
+                //Display the window.
+                frame.pack();
+                frame.setVisible(true);
             }
             else{
                 t.addTransaction(new TransactionBase(name, Integer.parseInt(tEnt.txtQuant.getText()), date));

@@ -71,7 +71,7 @@ public class ItemEntry extends JFrame
                 error += "Quantity must be in numeral format";
             }
             if (!error.equals("")){
-                JFrame frame = new JFrame("Welcome To Inventory");
+                JFrame frame = new JFrame("An error has occurred");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 //Create and set up the content pane.

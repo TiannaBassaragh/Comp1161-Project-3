@@ -1,10 +1,19 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.Scanner;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.Comparator;
+import java.util.Collections;
+import java.awt.Color;
 
 public class Store extends JPanel{
     private JButton     cmdTransactions;
@@ -13,13 +22,10 @@ public class Store extends JPanel{
     private JPanel      pnlCommand;
     private JPanel      pnlDisplay;
 
-    private JLabel      backgroundLabel;
-    private ImageIcon   backgroundImage;
-
     private Store thisStore;
 
     public Store() {
-        super(new GridLayout(2,4));
+        super(new GridLayout(5,6));
         thisStore = this;
 
 
@@ -28,20 +34,18 @@ public class Store extends JPanel{
 
         pnlDisplay.add(new JLabel("Welcome to the #1 Beauty Supply Store Database. CLICK an option to continue"));
 
-        //Creates the buttons
-        cmdTransactions = new JButton("View Transactions");
-        cmdTransactions.setBackground(Color.decode("#d7bf8c"));
+        //Creates and sets colours of buttons
+        cmdTransactions  = new JButton("View Transactions");
+        cmdTransactions.setBackground(Color.GREEN);
+        cmdInventory  = new JButton("View Inventory");
+        cmdInventory.setBackground(Color.BLUE);
+
+        //Adds functionality to buttons
+        //cmdClose.addActionListener(new CloseButtonListener());
         cmdTransactions.addActionListener(new TransactionButtonListener());
-        cmdInventory = new JButton("View Inventory");
-        cmdInventory.setBackground(Color.decode("#da775d"));
         cmdInventory.addActionListener(new InventoryButtonListener());
 
-        //Creates image and adds it to the UI
-        backgroundImage = new ImageIcon("backgroundImage.jpg");
-        backgroundLabel = new JLabel("", backgroundImage, JLabel.CENTER);
-        pnlDisplay.add(backgroundLabel);
-        
-        //Makes buttons appear in the UI
+        //Makes buttons appear in user interface
         pnlCommand.add(cmdTransactions);
         pnlCommand.add(cmdInventory);
 
@@ -52,7 +56,7 @@ public class Store extends JPanel{
 
     private static void startUpGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("Welcome To Our Store!");
+        JFrame frame = new JFrame("Welcome");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
@@ -75,7 +79,7 @@ public class Store extends JPanel{
 
     private class TransactionButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Transactions");
+            JFrame frame = new JFrame("Welcome to Transactions");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             //Create and set up the content pane.
@@ -91,7 +95,7 @@ public class Store extends JPanel{
 
     private class InventoryButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Inventory");
+            JFrame frame = new JFrame("Welcome To Inventory");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             //Create and set up the content pane.

@@ -184,9 +184,12 @@ public class Inventory extends JPanel{
                 ItemEntry ie = new ItemEntry(thisScreen);
         }
     }
-    private class CloseButtonListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
-            thisScreen.setVisible(false);
+    private class CloseButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(thisScreen);
+            if (frame != null) {
+                frame.dispose(); // Close the JFrame
+            }
         }
     }
     private class SortNameButtonListener implements ActionListener{

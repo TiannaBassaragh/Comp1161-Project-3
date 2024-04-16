@@ -112,20 +112,38 @@ public class Transactions extends JPanel{
 
     public void addTransaction(TransactionBase tb) {
         itemList = loadItems("stock.txt");
+        ArrayList<String> nameList =new ArrayList<String>();
         for (Item p : itemList) {
-            if (tb.getItemName().equals(p.getName())){
-                    p.decQuantity(tb.getQuantity());
+            nameList.add(p.getName());
+        }
+        if (nameList.contains(tb.getItemName())) {
+            for (Item i : itemList) {
+                if (i.getName().equals(tb.getItemName())) {
+                    i.decQuantity(tb.getQuantity());
                     unloadItems(itemList);
                     tb.tranID = SearchandSetId(transactionList);
+                    transactionList.add(tb);
                     addToTable(tb);
                     addToFile(tb);
+                }
             }
-            else{
-                ExceptionPopUp e = new ExceptionPopUp("Item not Found");
+        }
+        else{
+            JFrame frame = new JFrame("An error has occurred");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                //Create and set up the content pane.
+            ExceptionPopUp e = new ExceptionPopUp("Item not Found");
+            e.setOpaque(true); //content panes must be opaque
+            frame.setContentPane(e);
+                //Display the window.
+            frame.pack();
+            frame.setVisible(true);
+
             }
 
         }
-    }
+
     public int randomnum(){
         int min = 10000000;
         int max = 99999999;
@@ -209,9 +227,13 @@ public class Transactions extends JPanel{
         return transactionList;
     }
 
-    private class CloseButtonListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+    private class CloseButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             thisScreen.setVisible(false);
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(thisScreen);
+            if (frame != null) {
+                frame.dispose(); // Close the JFrame
+            }
         }
     }
     private class AddTransactionButtonListener implements ActionListener{
